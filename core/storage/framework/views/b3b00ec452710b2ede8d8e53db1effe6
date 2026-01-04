@@ -1,0 +1,59 @@
+<style type="text/css">
+    
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-md-12 pull-left">
+        <div class="panel panel-bordered">
+            <div class="panel-body">
+                <div class="row" id="print-details">
+                    <table class="table table-bordered" border="1">
+                        <thead>
+                            <tr>
+                                <th>Action Date</th>
+                                <th>Action Title</th>
+                                <th>Location</th>
+                                <th>Employee Location</th>
+                                <th>Action By</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php $lk=0;?>
+                            <?php foreach($timeline as $data): ?>
+                                <tr>
+                                    <td><?php echo e(date_format($data->created_at, 'D-M-d-Y')); ?><br><?php echo e(date_format($data->created_at, 'h:i:s')); ?></td>
+                                    <?php if($lk==count($timeline)-1): ?>
+                                        <td><?php echo e($data->type); ?></td>
+                                        <td><?php echo e($data->location->name); ?></td>
+                                        <td></td>
+                                        <td><?php echo e($data->user->first_name); ?> <?php echo e($data->user->last_name); ?> <br> <?php if(isset($data->user->code)): ?><?php echo e($data->user->code); ?><?php endif; ?></td>
+                                    <?php elseif($lk==count($timeline)-2): ?>
+                                        <td><?php echo e($data->type); ?></td>
+                                        <td><?php echo e($data->location->name); ?></td>
+                                        <td></td>
+                                        <td><?php echo e($data->user->first_name); ?> <?php echo e($data->user->last_name); ?> <br> <?php if(isset($data->user->code)): ?><?php echo e($data->user->code); ?><?php endif; ?></td>
+                                    <?php else: ?>
+                                        <td><?php echo e($data->type); ?></td>
+                                        <?php if($data->status->id==ASSET_UNDEPLOY): ?>
+                                            <td><?php echo e($data->location->name); ?></td>                         
+                                            <td></td>                         
+                                        <?php elseif($data->status->id==ASSET_DEPLOY): ?>                            
+                                            <td><?php echo e($data->location->name); ?></td>
+                                            <td><?php if($data->employee): ?><?php echo e($data->employee->first_name); ?> <?php echo e($data->employee->last_name); ?><?php endif; ?></td>
+                                        <?php else: ?>
+                                            <td><?php echo e($data->location->name); ?></td>
+                                            <td></td>
+                                        <?php endif; ?>
+                                        <td><?php echo e($data->user->first_name); ?> <?php echo e($data->user->last_name); ?> <br> <?php if(isset($data->user->code)): ?><?php echo e($data->user->code); ?><?php endif; ?></td>
+                                    <?php endif; ?>
+                                </tr>
+                                <?php $lk++; ?>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>

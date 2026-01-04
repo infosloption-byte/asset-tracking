@@ -1,0 +1,20 @@
+{
+    "name": "sammy/asset-modal-management",
+    "description": "Admin Panel Asset-Modal Management",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sriya",
+            "email": "csriyarathne@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Sammy\\asset-modal\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support" : "~5"
+    }
+}

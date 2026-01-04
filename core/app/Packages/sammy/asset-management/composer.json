@@ -1,0 +1,20 @@
+{
+    "name": "sammy/asset-management",
+    "description": "Admin ServiceType Management",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yasith Samarawickrama",
+            "email": "yazith11@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Sammy\\Asset\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support" : "~5"
+    }
+}

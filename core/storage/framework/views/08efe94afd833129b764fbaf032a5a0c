@@ -1,0 +1,280 @@
+ <?php $__env->startSection('title','Software List'); ?>
+<?php $__env->startSection('css'); ?>
+    <style type="text/css">
+        .switch.switch-sm{
+            width: 30px;
+            height: 16px;
+        }
+
+        .switch.switch-sm span i::before{
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-success:hover, .btn-success:focus, .btn-success.focus, .btn-success:active, .btn-success.active, .open > .dropdown-toggle.btn-success {
+            color: white;
+            background-color: #D96557;
+            border-color: #D96557;
+        }
+        .btn-success {
+            color: white;
+            background-color: #D96456;
+            border-color: #D96456;
+        }
+
+
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            background-color: #BB493C;
+            -moz-opacity: 0;
+            -khtml-opacity: 0;
+            -webkit-opacity: 0;
+            opacity: 0;
+            -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0 * 100);
+            filter: alpha(opacity=0 * 100);
+            -webkit-transform: scale3d(0.7, 1, 1);
+            -moz-transform: scale3d(0.7, 1, 1);
+            -o-transform: scale3d(0.7, 1, 1);
+            -ms-transform: scale3d(0.7, 1, 1);
+            transform: scale3d(0.7, 1, 1);
+            -webkit-transition: transform 0.4s, opacity 0.4s;
+            -moz-transition: transform 0.4s, opacity 0.4s;
+            -o-transition: transform 0.4s, opacity 0.4s;
+            transition: transform 0.4s, opacity 0.4s;
+            -webkit-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+            -moz-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+            -o-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+            animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+        }
+
+
+        .switch :checked + span {
+            border-color: #398C2F;
+            -webkit-box-shadow: #398C2F 0px 0px 0px 21px inset;
+            -moz-box-shadow: #2ecc71 0px 0px 0px 21px inset;
+            box-shadow: #398C2F 0px 0px 0px 21px inset;
+            -webkit-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+            -moz-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+            -o-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+            transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+            background-color: #398C2F;
+        }
+
+        .btn-actions {
+            color: #1975D1;
+        }
+
+        .btn-actions:hover {
+            color: #003366;
+        }
+
+    </style>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <ol class="breadcrumb">
+        <li>
+            <a href="<?php echo e(url('/')); ?>"><i class="fa fa-home mr5"></i>Home</a>
+        </li>
+        <li>
+            <a href="#">Assets Management</a>
+        </li>
+        <li class="active">Assets List</li>
+    </ol>
+
+    <form role="form" class="form-validation" method="get">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-bordered" id="panel-search">
+                    
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Search</label>
+                                    <input type="text" name="keyword" id="keyword" class="form-control" value="<?php echo e($old['keyword']); ?>" placeholder="Ex: Asset or Name">
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Version</label>
+                                    <input type="text" name="sversion" id="sversion" class="form-control" value="<?php echo e($old['sversion']); ?>" placeholder="Ex: 2.0.1">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label class="control-label">Manufacturers</label>
+                                    <select name="manufacturer" id="manufacturer" class="form-control chosen" required="required">
+                                        <option value="0">-ALL-</option>
+                                        <?php foreach($manufacturers as $manufacturer): ?>
+                                            <option value="<?php echo e($manufacturer->id); ?>" <?php if($manufacturer->id==$old['manufacturer']): ?> selected <?php endif; ?>><?php echo e($manufacturer->name); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label class="control-label">Supplier</label>
+                                    <select name="supplier" id="supplier" class="form-control chosen" required="required">
+                                        <option value="0">-ALL-</option>
+                                        <?php foreach($suppliers as $supplier): ?>
+                                            <option value="<?php echo e($supplier->id); ?>" <?php if($supplier->id==$old['supplier']): ?> selected <?php endif; ?>><?php echo e($supplier->name); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Category</label>
+                                    <select name="category" id="category" class="form-control chosen" required="required">
+                                        <option value="0">-ALL-</option>
+                                        <?php foreach($categories as $category): ?>
+                                            <option value="<?php echo e($category->id); ?>" <?php if($category->id==$old['category']): ?> selected <?php endif; ?>><?php echo e($category->name); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="pull-right" style="margin-top:8px">
+                                        <button type="submit" class="btn btn-primary btn-search">
+                                            <i class="fa fa-check"></i> search
+                                        </button>
+                                    </div>
+
+                                    <a style="margin-top:8px;margin-right:8px" class="btn btn-success pull-right" href="<?php echo e(URL::to("software/license/add")); ?>"  style="margin-right: 10px">
+                                        <i class="fa fa-plus" style="width: 28px;"></i>Add
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-bordered">
+                <div class="panel-heading border">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <strong style="font-size:13px;font-weight: bold">Assets List</strong>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="panel-body">
+                   <table class="table table-bordered" style="width:100%">
+                        <thead style="background:#ddd">
+                            <tr>
+                                <th width="5%">#</th>
+                                <th>AssetNo</th>
+                                <th>Software Name</th>
+                                <th>Version</th>
+                                <th>Manufacture</th>
+                                <th>Supplier</th>
+                                <th>Category</th>
+                                <th>No Of Users</th>
+                                <th>Used</th>
+                                <th>License</th>
+                                <th>Expire</th>
+                                <th width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(count($data)>0): ?>
+                            <?php foreach($data as $key=>$item): ?>
+                            <tr <?php if($item->license_to!=NULL && $item->license_to <= date('Y-m-d')): ?> style="background-color: red;color: #fff" <?php endif; ?>>
+                                <td><?php echo e($key+1); ?></td>
+                                <td>
+                                    <?php echo e($item->asset_no); ?>
+
+                                </td>
+                                <td>
+                                    <?php echo e($item->name); ?>
+
+                                </td>
+                                <td>
+                                    <?php echo e($item->version); ?>
+
+                                </td>
+                                <td><span><?php echo e($item->manufacture->name); ?></span></td>
+                                <td><span><?php echo e($item->supplier->name); ?></span></td>
+                                <td><?php echo e($item->category); ?></td>
+                                <td><?php echo e($item->max_users>0?$item->max_users:"UNLIMITED"); ?></td>
+                                <td><?php echo e($item->details->count()); ?></td>
+                                <td>
+                                    <?php if($item->license_to != null): ?>
+                                        From - <?php echo e($item->license_from); ?><br> To - <?php echo e($item->license_to); ?>
+
+                                    <?php else: ?>
+                                        NO EXPIRY
+                                    <?php endif; ?>
+                                </td>
+                                    <td>
+                                        <?php if($item->license_to != null): ?>
+                                    <?php
+                                    $date1 = date("Y-m-d");
+                                    $date2 = $item->license_to;
+
+                                    $diff = abs(strtotime($date2) - strtotime($date1));
+
+                                    $years = floor($diff / (365*60*60*24));
+                                    $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                                    $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                                    printf("%d years, %d months, %d days\n", $years, $months, $days); 
+                                    ?>
+                                        <?php else: ?>
+                                            NO EXPIRY
+                                        <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if(Sentinel::hasAnyAccess(['software.license.assign', 'admin'])): ?>
+                                        <a href="<?php echo e(url('software/license/assign/')); ?>/<?php echo e($item->id); ?>" class="btn  btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="View Item">assign</a>
+                                        <a href="<?php echo e(url('software/license/details/')); ?>/<?php echo e($item->id); ?>" class="btn  btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="View Item">view</a>
+                                    <?php else: ?>
+                                        <a href="#" class="disabled btn-actions" data-toggle="tooltip" data-placement="top" title="View Disabled"></a>
+                                        <a href="#" class="disabled btn-actions" data-toggle="tooltip" data-placement="top" title="View Disabled"></a>
+                                    <?php endif; ?>
+                                </td>   
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                   <h4>No Data Found</h4> 
+                                   <p>sorry we couldnt found any data matching your filter</p> 
+                                </td>
+                            </tr>    
+                        <?php endif; ?>
+                        
+                        </tbody>
+                    </table>
+                    <?php if(count($data)>0): ?>
+                        <?php echo $data->appends(Input::except('page'))->render()?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
+    <script src="<?php echo e(asset('assets/sammy_new/vendor/jquery-validation/dist/jquery.validate.min.js')); ?>"></script>
+    <script type="text/javascript">
+        var id = 0;
+        var table = '';
+        $(document).ready(function(){
+
+        });
+
+
+
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.sammy_new.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

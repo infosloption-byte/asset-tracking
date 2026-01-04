@@ -1,0 +1,20 @@
+{
+    "name": "sammy/category-management",
+    "description": "Admin ServiceType Management",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yasith Samarawickrama",
+            "email": "yazith11@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Sammy\\Category\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support" : "~5"
+    }
+}

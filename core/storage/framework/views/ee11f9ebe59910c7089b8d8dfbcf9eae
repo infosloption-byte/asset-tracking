@@ -1,0 +1,6 @@
+<ul class="nav">
+<?php if(isset($menu)): ?>
+	<?php echo $menu; ?>
+
+<?php endif; ?>
+</ul>

@@ -1,0 +1,81 @@
+{
+	"name": "laravel/laravel",
+	"description": "The Laravel Framework.",
+	"keywords": ["framework", "laravel"],
+	"license": "MIT",
+	"type": "project",
+	"require": {
+		"php": ">=5.5.9",
+		"laravel/framework": "5.1.*",
+		"cartalyst/sentinel": "2.0.*",
+		"doctrine/dbal":"~2.3",
+		"laravelcollective/html": "5.1.*",
+		"baum/baum": "~1.1",
+		"maatwebsite/excel": "~2.1.0",
+		"elibyy/laravel-tcpdf": "0.*",
+		"milon/barcode": "^5.3",
+		"dompdf/dompdf": "~0.6.1",
+		"itbz/fpdi": "dev-master",
+		"clegginabox/pdf-merger": "dev-master"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "~4.0",
+		"phpspec/phpspec": "~2.1"
+	},
+	"autoload": {
+		"classmap": [
+			"database",
+			"app/Models"
+		],
+		"psr-4": {
+			"App\\"                         : "app/",
+			"Sammy\\UserManage\\"           : "app/Packages/sammy/user-management/src/",
+			"Sammy\\MenuManage\\"           : "app/Packages/sammy/menu-management/src/",
+			"Sammy\\Permissions\\"          : "app/Packages/sammy/permissions/src/",
+			"Sammy\\UserRoles\\"            : "app/Packages/sammy/user-roles/src/",
+			"Sammy\\EmployeeManage\\"      	: "app/Packages/sammy/employee-management/src/",
+			"Sammy\\PermissionGroups\\"     : "app/Packages/sammy/permission-groups/src/",
+			
+			"Sammy\\ManufacturerManage\\"   : "app/Packages/sammy/manufacture-management/src/",
+			"Sammy\\AssetModal\\"   		: "app/Packages/sammy/asset-modal/src/",
+			"Sammy\\Location\\"   			: "app/Packages/sammy/location/src/",
+			"Sammy\\ServiceManage\\"        : "app/Packages/sammy/service-management/src/",
+			"Sammy\\ServiceTypeManage\\"    : "app/Packages/sammy/service-type-management/src/",
+			"Sammy\\CategoryManage\\"       : "app/Packages/sammy/category-management/src/",
+			"Sammy\\SupplierManage\\"       : "app/Packages/sammy/supplier-management/src/",
+			"Sammy\\AssetManage\\"          : "app/Packages/sammy/asset-management/src/",
+			"Sammy\\AssetUpgradeManage\\"   : "app/Packages/sammy/asset-upgrade-management/src/",
+			"Sammy\\Reports\\"              : "app/Packages/sammy/reports/src/",
+			"Sammy\\CheckInout\\"           : "app/Packages/sammy/check-inout/src/",
+			"Sammy\\BarcodeManage\\"        : "app/Packages/sammy/barcode-management/src/",
+			"Sammy\\AuditManage\\"          : "app/Packages/sammy/asset-audit-management/src/",
+			"Sammy\\AssetSoftwareManage\\"  : "app/Packages/sammy/asset-software-management/src/",
+			"Sammy\\RequestManage\\"        : "app/Packages/sammy/request-management/src/"
+		}
+	},
+	"autoload-dev": {
+		"classmap": [
+			"tests/TestCase.php"
+		]
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"php artisan clear-compiled",
+			"php artisan optimize"
+		],
+		"post-update-cmd": [
+			"php artisan clear-compiled",
+			"php artisan optimize"
+		],
+		"post-create-project-cmd": [
+			"php -r \"copy('.env.example', '.env');\"",
+			"php artisan key:generate"
+		]
+	},
+	"config": {
+		"preferred-install": "dist",
+		"allow-plugins": {
+			"kylekatarnls/update-helper": true
+		}
+	}
+}

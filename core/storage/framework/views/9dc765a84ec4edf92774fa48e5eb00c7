@@ -1,0 +1,287 @@
+<style type="text/css">
+    
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-md-12 pull-left">
+        <div class="panel panel-bordered">
+            <div class="panel-body">
+                <div class="row" id="print-details">
+                    <table>
+                        <tr>
+                            <td style="vertical-align: bottom;">
+                                <h4 style="font-weight: 600;vertical-align: bottom;margin: 0;">Asset (<?php echo e($details->asset_no); ?>) Details</h4>
+                            </td>
+                            <td>
+                                <?php if($details->barcode!=null): ?>
+                                    <?php echo '<img style="" src="data:image/png;base64,' . DNS1D::getBarcodePNG($details->inventory_no, $details->barcode->barcodetype->name,1,40) . '" alt="barcode"   />' ?>
+                                    <br/><i style="font-size: 9px;"><?php echo e($details->inventory_no); ?></i>
+                                <?php else: ?>
+                                    <div id="barcode_wrapper_empty" data-barcodeType="0" class="text-center" >
+                                        <h5>barcode not genarated</h5>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Inventory No  : <?php echo e($details->inventory_no); ?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Manual No  : <?php echo e($details->manual_no); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Manufacturer  : <?php echo e($details->manufacturer->name); ?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Account Code  : <?php echo e($details->account_code); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Model         : <?php echo e($details->model); ?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">PO Number No  : <?php echo e($details->po_number); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Purcahse Date : <?php echo e($details->purchased_date); ?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Purchased Value  : <?php echo e($details->purchased_value); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Warranty Begin : <?php echo e($details->warranty_from); ?> - End :<?php echo e($details->warranty_to); ?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.83em;font-weight: 600;margin-top: 5px;margin-bottom: 5px;">Scrap Value  : <?php echo e($details->scrap_value); ?></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <hr>
+                    </div>
+
+                    <table>
+                        <?php if($details->supplier): ?>
+                            <tr>
+                                <td colspan="3">Supplier : <?php echo e($details->supplier->name); ?> (<?php echo e($details->supplier->country); ?> - <?php echo e($details->supplier->city); ?>)</td>
+                            </tr>
+                            <tr>
+                                <td>Address : <?php echo e($details->supplier->address); ?></td>
+                                <td>Contact No : <?php echo e($details->supplier->phone); ?></td>
+                                <td>Email : <?php echo e($details->supplier->email); ?></td>
+                            </tr>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2"> - No Supplier Detais - </td>
+                            </tr>
+                        <?php endif; ?>
+                    </table>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <hr>
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="6" align="left">
+                                    <span style="font-weight:bold;font-size:12px;margin: 0;padding:0;">Upgraded Assets</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th align="center" style="font-weight: bold;">Serial No</th>
+                                <th align="center" style="font-weight: bold;">Inventory No</th>
+                                <th align="center" style="font-weight: bold;">Model</th>
+                                <th align="center" style="font-weight: bold;">Purchased Value</th>
+                                <th align="center" style="font-weight: bold;">Begin</th>
+                                <th align="center" style="font-weight: bold;">End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php $i=1 ?>
+                        <?php foreach($details->upgradehistory as $history): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo e(url('asset/view/')); ?>/<?php echo e($history->upgrade_asset_id); ?>" style="text-decoration: underline;color:blue"><?php echo e($history->asset->asset_no); ?></a>
+                                </td>
+                                <td>
+                                    <?php if($history->asset->inventory_no!=null): ?>
+                                        <?php echo e($history->asset->inventory_no); ?>
+
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if($history->asset->assetmodel!=null): ?>
+                                        <?php echo e($history->asset->assetmodel->name); ?>
+
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo e(CURRENCY); ?><?php echo e(number_format($history->asset->purchased_value,2,'.',',')); ?></td>
+                                <td style="text-align: center"><?php echo e($history->asset->warranty_from); ?></td>
+                                <td style="text-align: center"><?php echo e($history->asset->warranty_to); ?></p></td>
+                                <?php $i++ ?>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table><br/><br/><br/>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="6" align="left">
+                                    <span style="font-weight:bold;font-size:12px;margin: 0;padding:0;">Upgraded Into</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th align="center" style="font-weight: bold;">Serial No</th>
+                                <th align="center" style="font-weight: bold;">Inventory No</th>
+                                <th align="center" style="font-weight: bold;">Model</th>
+                                <th align="center" style="font-weight: bold;">Purchased Value</th>
+                                <th align="center" style="font-weight: bold;">Begin</th>
+                                <th align="center" style="font-weight: bold;">End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(count($assignto)>0): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo e(url('asset/view/')); ?>/<?php echo e($assignto->id); ?>" style="text-decoration: underline;color:blue"><?php echo e($assignto->asset_no); ?></a>
+                                </td>
+                                <td>
+                                    <?php if($assignto->inventory_no!=null): ?>
+                                        <?php echo e($assignto->inventory_no); ?>
+
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if($assignto->assetmodel!=null): ?>
+                                        <?php echo e($assignto->assetmodel->name); ?>
+
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo e(CURRENCY); ?><?php echo e(number_format($assignto->purchased_value,2,'.',',')); ?></td>
+                                <td style="text-align: center"><?php echo e($assignto->warranty_from); ?></td>
+                                <td style="text-align: center"><?php echo e($assignto->warranty_to); ?></p></td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <hr>
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th colspan="7" align="left">
+                                <span style="font-weight:bold;font-size:12px;margin: 0;padding:0;">Assigned Software Details</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th align="center" style="font-weight: bold;">Name</th>
+                            <th align="center" style="font-weight: bold;">Category</th>
+                            <th align="center" style="font-weight: bold;">Description</th>
+                            <th align="center" style="font-weight: bold;">Expiry</th>
+                            <th align="center" style="font-weight: bold;">Manufacturer</th>
+                            <th align="center" style="font-weight: bold;">Supplier</th>
+                            <th align="center" style="font-weight: bold;">Reference</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(count($license)>0): ?>
+                            <?php foreach($license as $value): ?>
+                                <tr>
+                                    <td><?php echo e($value->name); ?></td>
+                                    <td><?php echo e($value->category); ?></td>
+                                    <td><?php echo e($value->description); ?></td>
+                                    <td><?php echo e($value->license_to); ?></td>
+                                    <td><?php echo e($value['manufacture']->name); ?></td>
+                                    <td><?php echo e($value['supplier']->name); ?></td>
+                                    <td><?php echo e($value->reference_no); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" align="center"><br/><br/>Nothing Assinged yet</td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <hr>
+                    </div>
+                    <table class="table table-bordered" width="100%">
+                        <thead>
+                        <tr>
+                            <th align="left"><span style="font-weight:bold;font-size:12px;margin: 0;padding:0;">Description</span></th>
+                        </tr>
+                        <tr>
+                            <th align="left">
+                                <?php echo e($details->description); ?>
+
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <hr>
+                    </div>
+
+                    <table class="table table-bordered" width="50%">
+                        <thead>
+                        <tr>
+                            <th colspan="2" align="left">
+                                <span style="font-weight:bold;font-size:14px;margin: 0;padding:0;">Details</span><br/>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(count($assetDetails)>0): ?>
+                            <?php foreach($assetDetails as $deviceModel): ?>
+                                <tr>
+                                    <td colspan="2"><span style="font-weight: bold;"><?php echo e($deviceModel['modal']); ?></span></td>
+                                </tr>
+                                <?php foreach($deviceModel['value'] as $key=>$fieldset): ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo e($key); ?>
+
+                                        </td>
+                                        <td>
+                                            <?php echo e($fieldset?:'-'); ?>
+
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <tr><td></td></tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2" align="center"><br/><br/>No Details</td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>

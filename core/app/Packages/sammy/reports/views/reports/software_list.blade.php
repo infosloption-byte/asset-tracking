@@ -1,0 +1,232 @@
+@extends('layouts.sammy_new.master') @section('title','Software List')
+@section('css')
+<style type="text/css">
+	.pagination{
+		padding-left: 15px;
+	}
+</style>
+@stop
+@section('content')
+<ol class="breadcrumb">
+	<li>
+    	<a href="{{{url('/')}}}"><i class="fa fa-home mr5"></i>Home</a>
+  	</li>
+  	<li>
+    	<a href="#">Report Management</a>
+  	</li>
+  	<li class="active">Software Summery List</li>
+</ol>
+<div ng-app="ngApp" ng-controller="ReportManageController">
+	<div class="row">
+		<div class="col-xs-12">
+			
+			<div class="panel panel-bordered" id="panel-search">
+				<div class="panel-heading border">
+					<h4><strong>Software Asset Report</strong></h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="form-group col-md-3">
+							<label class="control-label">Serial No.</label>
+							<input type="text" class="form-control" name="serial" id="serial" value="{{$old->serial}}" placeholder="Enter serial no">
+						</div>
+						<div class="form-group col-md-3">
+							<label class="control-label">Software Type</label>
+							<select name="category" id="category" class="form-control chosen" required="required">
+								<option value="0">---- Select type -----</option>
+								@foreach($categories as $category)
+									<option value="{{$category->id}}" @if($category->id==$old['category']) selected @endif>{{$category->name}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="form-group col-md-3">
+							<label class="control-label">Supplier</label>
+							<select name="supplier" id="supplier" class="form-control chosen text-left">
+								<option value="">-- ALL --</option>
+								@foreach($suppliers as $key => $supplier)
+									<option value="{{$key}}" @if($key==$old->supplier) selected @endif>{{$supplier}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="form-group col-md-3">
+							<label class="control-label">Manufacturer</label>
+							<select name="manufacturer" id="manufacturer" class="form-control chosen">
+								<option value="">-- ALL --</option>
+								@foreach($manufacturers as $key => $manufacturer)
+									<option value="{{$key}}" @if($key==$old->manufacturer) selected @endif>{{$manufacturer}}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<div class="pull-right" style="margin-top:8px;margin-left:8px">
+								<button type="button" class="btn btn-danger btn-pdf disabled">
+									<i class="fa fa-download"></i> PDF
+								</button>
+							</div>
+							
+							<div class="pull-right" style="margin-top:8px;margin-left:8px">
+								<button type="button" class="btn btn-warning btn-excel disabled">
+									<i class="fa fa-download"></i> Excel
+								</button>
+							</div>
+							<div class="pull-right" style="margin-top:8px">
+								<button type="button" class="btn btn-primary btn-search" ng-click="find(1)">
+									<i class="fa fa-check"></i> search
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="panel panel-bordered">
+	      		<div class="panel-body" style="overflow-x:scroll">
+	      			<table class="table table-bordered mb-0">
+	          			<thead style="background:#ddd">
+		                  	<th class="text-center" width="2%">#</th>
+		                  	<th class="text-left" width="15%">Serial No</th>
+		                  	<th class="text-center">Software Name</th>
+		                  	<th class="text-center">Supplier Name</th>
+		                  	<th class="text-center">Category</th>
+		                  	<th class="text-center">Version</th>
+		                  	<th class="text-center">Manufacturer</th>
+		                  	<th class="text-center">No of License</th>
+		                  	<th class="text-center">No of Allocation</th>
+		                  	<th class="text-center">Remaining</th>
+		                  	<th class="text-center">License Start Date</th>
+		                  	<th class="text-center">License Expiry Date</th>
+	          			</thead>
+	          			<tbody>
+		              		<tr ng-repeat="software in softwares.data track by $index">
+		              			<td class="text-center">@{{(softwares.current_page-1)*softwares.per_page+$index+1}}</td>
+		              			<td class="text-left">@{{software.asset_no}}</td>
+          						<td class="text-center">@{{software.name}}</td>
+          						<td class="text-center">@{{software.supplier.name}}</td>
+          						<td class="text-center">@{{software.category.name}}</td>
+          						<td class="text-center">@{{software.version}}</td>
+          						<td class="text-center">@{{software.manufacture.name}}</td>
+          						<td class="text-center">@{{software.max_users}}</td>
+          						<td class="text-center">@{{software.details.length}}</td>
+          						<td class="text-center">@{{software.max_users - software.details.length}}</td>
+          						<td class="text-center">@{{software.license_from}}</td>
+          						<td class="text-center">@{{software.license_to}}</td>
+		              		</tr>
+		              	</tbody>
+	          		</table>
+	      		</div>
+	      		<paging page="softwares.current_page" page-size="softwares.per_page" total="softwares.total" show-prev-next="true" show-first-last="true" ul-class="pagination" paging-action="find(page)"></paging>
+	      	</div>	
+		</div>
+	</div>
+</div>
+@stop
+@section('js')
+
+<script src="{{asset('/assets/dist/angular/angular/angular.min.js')}}"></script>
+<script src="{{asset('assets/dist/moment/moment.js')}}"></script>
+<script src="{{asset('assets/dist/angular-moment/angular-moment.min.js')}}"></script>
+<script src="{{asset('/assets/dist/ng-multiselect/dualmultiselect.js')}}"></script>
+<script src="{{asset('assets/dist/ng-image/angular.img-fallback.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular-bootstrap/ui-bootstrap-0.14.3.min.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular-bootstrap/ui-bootstrap-tpls-0.14.3.min.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular/angular-sanitize.min.js')}}"></script>
+<script src="{{asset('assets/dist/ng-pagination/dist/paging.js')}}"></script>
+
+<script src="{{asset('assets/sammy_new/vendor/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+<script type="text/javascript">
+
+	var id = 0;
+
+	$(document).ready(function(){
+		
+		$('.btn-excel').click(function(e){
+			e.preventDefault();
+
+        	serial = $("#serial").val();
+			category = $("#category").val();
+        	supplier = $("#supplier").val();
+        	manufacturer = $("#manufacturer").val();
+
+        	window.location.href = '{{url('reports/software-report/download/excel')}}?serial='+serial+'&category='+category+'&supplier='+supplier+'&manufacturer='+manufacturer;
+
+		});
+
+		$('.btn-pdf').click(function(e){
+			e.preventDefault();
+
+        	serial = $("#serial").val();
+			category = $("#category").val();
+        	supplier = $("#supplier").val();
+        	manufacturer = $("#manufacturer").val();
+
+        	window.open('{{url('reports/software-report/download/pdf')}}?serial='+serial+'&category='+category+'&supplier='+supplier+'&manufacturer='+manufacturer,'_blank');
+
+		});
+	});
+
+	function pageReload(){
+		window.location.href = window.location.href;
+	}
+
+	var app = angular.module("ngApp",['angularMoment','dualmultiselect','angularImgFallback','ui.bootstrap','ngSanitize','bw.paging']);
+
+    app.config(['$tooltipProvider', function ($tooltipProvider) {
+        $tooltipProvider.options({
+            appendToBody: true, // 
+            appendToBody: true, // 
+            placement:'bottom' // Set Default Placement
+        });
+    }]);
+
+    //controller
+    app.controller("ReportManageController", function($scope)
+    {
+    	$scope.softwares = [];
+
+    	$scope.page = 1;
+
+    	$scope.find = function (page)
+	    {
+	    	$scope.page = page;
+
+            $.ajax({
+	            url: "{{url('reports/software-report-data')}}",
+	            type: 'GET',
+	            data: {
+	            	page: page,
+	            	serial : $("#serial").val(),
+					category : $("#category").val(),
+		        	supplier : $("#supplier").val(),
+		        	manufacturer : $("#manufacturer").val()
+	            },
+	            success: function (data) {
+
+	            	if(data.data.length>0){
+	            		$('.btn-pdf').removeClass('disabled');
+                		$('.btn-excel').removeClass('disabled');
+                	}else{
+                		$('.btn-pdf').addClass('disabled');
+                		$('.btn-excel').addClass('disabled');
+                	}
+
+	                $scope.softwares = data;
+	                $scope.$apply();
+
+	            },
+	            error:function(data) {
+	              $('.dialog-loader').hide();
+	            }
+	        });
+	    }
+    });
+
+</script>
+@stop

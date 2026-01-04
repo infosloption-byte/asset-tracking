@@ -1,0 +1,238 @@
+@extends('layouts.sammy_new.master') @section('title','Audit Summery Report')
+@section('css')
+<style type="text/css">
+	.pagination{
+		padding-left: 15px;
+	}
+</style>
+@stop
+@section('content')
+<ol class="breadcrumb">
+	<li>
+    	<a href="{{{url('/')}}}"><i class="fa fa-home mr5"></i>Home</a>
+  	</li>
+  	<li>
+    	<a href="#">Report Management</a>
+  	</li>
+  	<li class="active">Audit Trail</li>
+</ol>
+<div ng-app="ngApp" ng-controller="ReportManageController">
+	<div class="row">
+		<div class="col-xs-12">
+			
+			<div class="panel panel-bordered" id="panel-search">
+				<div class="panel-heading border">
+					<h4><strong>Audit Trail Report</strong></h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="form-group col-md-3" style="text-align: center">
+							<label class="control-label">From Date</label>
+							<div class='input-group date' id='completed_datedatetimepicker'>
+								<input type='text' id="from_date" name="from_date" class="form-control" style="text-align: center" value="{{$old['from_date']}}"/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+
+						<div class="form-group col-md-3" style="text-align: center">
+							<label class="control-label">To Date</label>
+							<div class='input-group date' id='completed_datedatetimepicker'>
+								<input type='text' id="to_date" name="to_date" class="form-control" style="text-align: center" value="{{$old['to_date']}}"/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+
+						<div class="form-group col-md-3" style="text-align: left">
+							<label class="control-label">User</label>
+							<input class="form-control" id="user" name="user" value="{{$old['user']}}"/>
+						</div>
+
+						<div class="form-group col-md-3" style="text-align: left">
+							<label class="control-label">Module</label>
+							<select class="form-control chosen" id="module" name="module">
+								<option value=""> - All Modules - </option>
+								@if(count($modules) > 0)
+									@foreach($modules as $mod)
+										<option value="{{$mod->module}}" @if($mod->module == $old['module']) selected @endif>{{$mod->module}}</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<div class="pull-right" style="margin-top:8px;margin-left:8px">
+								<button type="button" class="btn btn-danger btn-pdf disabled">
+									<i class="fa fa-download"></i> PDF
+								</button>
+							</div>
+							
+							<div class="pull-right" style="margin-top:8px;margin-left:8px">
+								<button type="button" class="btn btn-warning btn-excel disabled">
+									<i class="fa fa-download"></i> Excel
+								</button>
+							</div>
+							<div class="pull-right" style="margin-top:8px">
+								<button type="button" class="btn btn-primary btn-search" ng-click="find(1)">
+									<i class="fa fa-check"></i> search
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="panel panel-bordered">
+	      		<div class="panel-body" style="overflow-x:scroll">
+	      			<table class="table table-bordered mb-0">
+	          			<thead style="background:#ddd">
+		                  	<th class="text-center" width="2%">#</th>
+		                  	<th>Date/Time</th>
+							<th>Module</th>
+							<th>Event</th>
+							<th>User</th>
+							<th>IP</th>
+							<th width="25%">Old Data</th>
+							<th width="25%">New Data</th>
+	          			</thead>
+	          			<tbody>
+		              		<tr ng-repeat="audit in audits.data track by $index">
+		              			<td class="text-center">@{{(audits.current_page-1)*audits.per_page+$index+1}}</td>
+		              			<td>@{{audit.event_time}}</td>
+								<td>@{{audit.module}}</td>
+								<td>@{{audit.event}}</td>
+								<td>
+									<strong style="font-weight: bolder;">@{{audit.user_id}}</strong><br/>
+									@{{audit.username}}
+								</td>
+								<td>@{{audit.ip}}</td>
+								<td>
+									<!-- <pre pretty-json="audit.old_data"  /> -->
+									<!-- <pre contenteditable="true">@{{audit.old_data | json}}</pre> -->
+									<pre>@{{audit.old_data}}</pre>
+								</td>
+								<td><pre>@{{audit.new_data}}</pre></td>
+		              		</tr>
+		              	</tbody>
+	          		</table>
+	      		</div>
+	      		<paging page="audits.current_page" page-size="audits.per_page" total="audits.total" show-prev-next="true" show-first-last="true" ul-class="pagination" paging-action="find(page)"></paging>
+	      	</div>	
+		</div>
+	</div>
+</div>
+@stop
+@section('js')
+
+<script src="{{asset('/assets/dist/angular/angular/angular.min.js')}}"></script>
+<script src="{{asset('assets/dist/moment/moment.js')}}"></script>
+<script src="{{asset('assets/dist/angular-moment/angular-moment.min.js')}}"></script>
+<script src="{{asset('/assets/dist/ng-multiselect/dualmultiselect.js')}}"></script>
+<script src="{{asset('assets/dist/ng-image/angular.img-fallback.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular-bootstrap/ui-bootstrap-0.14.3.min.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular-bootstrap/ui-bootstrap-tpls-0.14.3.min.js')}}"></script>
+<script src="{{asset('assets/dist/angular/angular/angular-sanitize.min.js')}}"></script>
+<script src="{{asset('assets/dist/ng-pagination/dist/paging.js')}}"></script>
+
+<script src="{{asset('assets/sammy_new/vendor/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+<script type="text/javascript" src="http://darul75.github.io/ng-prettyjson/javascripts/ng-prettyjson.min.js"></script>
+
+<script type="text/javascript">
+
+	var id = 0;
+
+	$(document).ready(function(){
+		
+		$('.btn-excel').click(function(e){
+			e.preventDefault();
+
+        	from_date = $("#from_date").val();
+			to_date = $("#to_date").val();
+			type = $("#module").val();
+			user = $("#user").val();
+
+        	window.location.href = '{{url('reports/audit-trail-report/download/excel')}}?module='+type+'&from_date='+from_date+'&to_date='+to_date+'&user='+user;
+
+		});
+
+		$('.btn-pdf').click(function(e){
+			e.preventDefault();
+
+        	from_date = $("#from_date").val();
+			to_date = $("#to_date").val();
+			type = $("#module").val();
+			user = $("#user").val();
+
+        	window.open('{{url('reports/audit-trail-report/download/pdf')}}?module='+type+'&from_date='+from_date+'&to_date='+to_date+'&user='+user,'_blank');
+
+		});
+	});
+
+	function pageReload(){
+		window.location.href = window.location.href;
+	}
+
+	var app = angular.module("ngApp",['angularMoment','dualmultiselect','angularImgFallback','ui.bootstrap','ngSanitize','bw.paging','ngPrettyJson']);
+
+    app.config(['$tooltipProvider', function ($tooltipProvider) {
+        $tooltipProvider.options({
+            appendToBody: true, // 
+            appendToBody: true, // 
+            placement:'bottom' // Set Default Placement
+        });
+    }]);
+
+    //controller
+    app.controller("ReportManageController", function($scope)
+    {
+    	$scope.audits = [];
+
+    	$scope.page = 1;
+
+    	$scope.find = function (page)
+	    {
+	    	$scope.page = page;
+
+            $.ajax({
+	            url: "{{url('reports/audit-trail-data')}}",
+	            type: 'GET',
+	            data: {
+	            	page: page,
+	            	from_date : $("#from_date").val(),
+					to_date : $("#to_date").val(),
+					type : $("#module").val(),
+					user : $("#user").val()
+	            },
+	            success: function (data) {
+
+	            	if(data.data.length>0){
+	            		$('.btn-pdf').removeClass('disabled');
+                		$('.btn-excel').removeClass('disabled');
+                	}else{
+                		$('.btn-pdf').addClass('disabled');
+                		$('.btn-excel').addClass('disabled');
+                	}
+
+	                $scope.audits = data;
+	                $scope.$apply();
+
+	            },
+	            error:function(data) {
+	              $('.dialog-loader').hide();
+	            }
+	        });
+	    }
+    });
+
+</script>
+@stop

@@ -1,0 +1,160 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Admin Panel - User Login</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+  <!-- page level plugin styles -->
+  <!-- /page level plugin styles -->
+
+  <!-- build:css({.tmp,app}) styles/app.min.css -->
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/vendor/bootstrap/dist/css/bootstrap.min.css')}}">
+  
+  
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/styles/roboto.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/styles/font-awesome.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/styles/panel.css')}}">
+  
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/styles/urban.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/sammy_new/styles/urban.skins.css')}}">
+
+<style type="text/css">
+  
+  .form-layout {
+      margin: 0 auto;
+      padding: 15px;
+      border: 1px solid rgb(221, 221, 221);
+      background: #fff;
+  }
+
+  p {
+    color: #2d2d2d;
+    font-family:'Raleway' sans-serif;
+    font-size: 14px;
+}
+
+.bg-black {
+    color: #2d2d2d;
+    font-family:'Raleway'sans-serif;
+    font-size: 14px;
+    
+}
+
+.center-wrapper {
+  background-attachment: fixed;
+  background-position: fixed;
+  background-repeat: no-repeat;
+  background-size : cover;
+  background-color : #02ADF3;
+}
+
+/* Retina display */
+@media screen and (min-width: 1024px){
+    .center-wrapper{
+        background: none;
+    }
+}
+
+/* Desktop */
+@media screen and (min-width: 980px) and (max-width: 1024px){
+    .center-wrapper{
+        background: none;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 760px) and (max-width: 980px){
+    .center-wrapper{
+        background: none;
+    }
+}
+
+/* Mobile HD */
+@media screen and (min-width: 350px) and (max-width: 760px){
+    .center-wrapper{
+        background: none;
+    }
+}
+
+/* Mobile LD */
+@media screen and (max-width: 350px){
+    .center-wrapper{
+        background: none;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+  <div class="app layout-fixed-header bg-black usersession">
+    <div class="full-height">
+      <div class="center-wrapper">
+        <div class="center-content">
+          <div class="row no-margin">
+            <div class="col-md-3 col-sm-offset-4" style="margin-left: 37%">
+              <form role="form" action="{{URL::to('user/login')}}" class="form-layout checkbo" method="post">
+                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+                <div class="row">
+                    
+                    <div class="col-md-12">
+                        <p class="text-center" style="font-weight: bold;font-size: 25px;">Asset Tracking</p>
+                        <p class="text-center">Track everything anywhere anytime</p>
+                    </div>
+                </div>
+                
+                @if($errors->has('login'))
+                  <div class="alert alert-danger">
+                    Oh snap! {{$errors->first('login')}}
+                  </div>
+                @endif
+                <div class="form-inputs" style="margin-top: 20px;">
+                  <input type="text" name="username" class="form-control input-lg" placeholder="Username" autocomplete="off" value="{{{Input::old('username')}}}" @if(empty(Input::old('username'))) autofocus @endif>
+                  <input type="password" name="password" class="form-control input-lg" placeholder="Password" @if(!empty(Input::old('username'))) autofocus @endif>
+                </div>
+                <label class="cb-checkbox">
+                  <input type="checkbox" name="remember" value="{{Input::old('remember')}}" />Keep me signed in
+                </label>
+                <button class="btn btn-success btn-block btn-lg mb15" type="submit">
+                  <span>SIGN IN</span>
+                </button>
+                <p>
+                  {{--<a href="#" >Forgot your password?</a>--}}
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- build:js({.tmp,app}) scripts/app.min.js -->
+  <script src="{{asset('assets/sammy_new/scripts/extentions/modernizr.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/vendor/jquery/dist/jquery.min.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/vendor/bootstrap/dist/js/bootstrap.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/ui/link-transition.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/ui/panel-controls.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/ui/preloader.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/ui/toggle.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/urban-constants.js')}}"></script>
+  <script src="{{asset('assets/sammy_new/scripts/extentions/lib.js')}}"></script>
+
+  <script src="{{asset('assets/sammy_new/vendor/chosen_v1.4.0/chosen.jquery.min.js')}}"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.checkbo').checkBo();
+    });
+  </script>
+  <!-- endbuild -->
+</body>
+
+</html>
