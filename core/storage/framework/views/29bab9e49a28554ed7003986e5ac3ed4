@@ -1,0 +1,545 @@
+ <?php $__env->startSection('title','Dashboard'); ?>
+<?php $__env->startSection('css'); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/sammy_new/styles/adminLte.min.css')); ?>">
+<style type="text/css">
+
+    .switch.switch-sm{
+        width: 30px;
+        height: 16px;
+    }
+
+    .switch.switch-sm span i::before{
+        width: 16px;
+        height: 16px;
+    }
+
+    .btn-success:hover, .btn-success:focus, .btn-success.focus, .btn-success:active, .btn-success.active, .open > .dropdown-toggle.btn-success {
+        color: white;
+        background-color: #D96557;
+        border-color: #D96557;
+    }
+    
+    .btn-success {
+        color: white;
+        background-color: #D96456;
+        border-color: #D96456;
+    }
+
+
+    .btn-success::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-color: #BB493C;
+        -moz-opacity: 0;
+        -khtml-opacity: 0;
+        -webkit-opacity: 0;
+        opacity: 0;
+        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0 * 100);
+        filter: alpha(opacity=0 * 100);
+        -webkit-transform: scale3d(0.7, 1, 1);
+        -moz-transform: scale3d(0.7, 1, 1);
+        -o-transform: scale3d(0.7, 1, 1);
+        -ms-transform: scale3d(0.7, 1, 1);
+        transform: scale3d(0.7, 1, 1);
+        -webkit-transition: transform 0.4s, opacity 0.4s;
+        -moz-transition: transform 0.4s, opacity 0.4s;
+        -o-transition: transform 0.4s, opacity 0.4s;
+        transition: transform 0.4s, opacity 0.4s;
+        -webkit-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+        -moz-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+        -o-animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+    }
+
+
+    .switch :checked + span {
+        border-color: #398C2F;
+        -webkit-box-shadow: #398C2F 0px 0px 0px 21px inset;
+        -moz-box-shadow: #2ecc71 0px 0px 0px 21px inset;
+        box-shadow: #398C2F 0px 0px 0px 21px inset;
+        -webkit-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+        -moz-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+        -o-transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+        transition: border 300ms, box-shadow 300ms, background-color 1.2s;
+        background-color: #398C2F;
+    }
+
+    .datatable a.blue {
+        color: #1975D1;
+    }
+
+    .datatable a.blue:hover {
+        color: #003366;
+    }
+
+    .cursor{
+      cursor: pointer;
+    }
+
+    .chosen-container,.chosen-container-single{
+        width: 100%;
+    }
+
+    #chartdiv {
+        width: 100%;
+        height: 400px;
+        font-size: 11px;
+    }
+
+    .amcharts-pie-slice {
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition-duration: 0.3s;
+        transition: all .3s ease-out;
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+        -o-transition: all .3s ease-out;
+        cursor: pointer;
+        box-shadow: 0 0 30px 0 #000;
+    }
+
+    .amcharts-pie-slice:hover {
+        transform: scale(1.1);
+        filter: url(#shadow);
+    }
+
+    .link{
+        color:blue !important;
+        text-decoration: underline;
+    }
+
+    .info-box-content{
+        margin-left: 0px;
+    }
+</style>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-bordered">
+                <div class="panel-body">
+                    
+                    <div class="row">
+                        <div class="col-xs-10 col-md-10">
+                            <div class="form-group" style="align-items: center">              
+                                <?php echo Form::select('location',$locations, '', ['class'=>'form-control chosen error','style'=>'width:100%;','required','id'=>'location']); ?>       
+                            </div>       
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
+                            <button type="button" class="btn btn-default btn-find">FIND</button>
+                        </div>
+                    </div>
+
+                    <div class="row" id="bucket_row" name="bucket_row" style="display: none">
+                        <div class="col-md-3 col-sm-6 col-xs-12 btnStatus" style="width: 20%" data-id="0">
+                            <div class="info-box bg-yellow cursor" id="box_total" name="box_total">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">TOTAL</span>
+                                    <span class="info-box-number" id="total_asset" name="total_asset"></span>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <span class="progress-description" id="total_asset_des" name="total_asset_des"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-12 btnStatus" style="width: 20%" data-id="2">
+                            <div class="info-box bg-green cursor" id="box_deploy" name="box_deploy">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Deployed</span>
+                                    <span class="info-box-number" id="deploy_asset" name="deploy_asset"></span>
+
+                                    <div class="progress">
+                                        <div class="progress-bar" id="deploy_asset_pro" name="deploy_asset_pro"></div>
+                                    </div>
+                                    <span class="progress-description" id="deploy_asset_des" name="deploy_asset_des"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-12 btnStatus" style="width: 20%" data-id="1">
+                            <div class="info-box bg-blue cursor" id="box_undeploy" name="box_undeploy">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Un-deployed</span>
+                                    <span class="info-box-number" id="undeploy_asset" name="undeploy_asset"></span>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="undeploy_asset_pro" name="undeploy_asset_pro"></div>
+                                    </div>
+                                    <span class="progress-description" id="undeploy_asset_des" name="undeploy_asset_des"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-12 btnStatus" style="width: 20%" data-id="5">
+                            <div class="info-box bg-aqua cursor" id="box_pending" name="box_pending">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">In-service</span>
+                                    <span class="info-box-number" id="pending_asset" name="pending_asset"></span>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="pending_asset_pro" name="pending_asset_pro"></div>
+                                    </div>
+                                    <span class="progress-description" id="pending_asset_des" name="pending_asset_des"></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 btnStatus" style="width: 20%" data-id="6">
+                            <div class="info-box bg-red cursor" id="box_damage" name="box_damage">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">disposed</span>
+                                    <span class="info-box-number" id="damage_asset" name="damage_asset"></span>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="damage_asset_pro" name="damage_asset_pro"></div>
+                                    </div>
+                                    <span class="progress-disposed_n" id="damage_asset_des" name="damage_asset_des"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="row">
+                <div class="panel panel-bordered">
+                    <div class="panel-body">
+                        <h4 class="text-center">CATEGORY ANALYSIS</h4>
+                        <table class="table table-bordered table-hover" id="catTable">
+                            <thead>
+                            <tr>
+                                <th width="5%">#</th>
+                                <th>Category</th>
+                                <th>Count</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-bordered">
+                    <div class="panel-body">
+                        <h4 class="text-center">REQUEST ANALYSIS</h4>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Request</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>                          
+                                <tr>
+                                    <td>
+                                        <a class='link' href="<?php echo e(url('request/list')); ?>?type=1&status=1" target="new">Asset Request</a>
+                                    </td>
+                                    <td id="asset_request_count_text" name="asset_request_count_text"><?php echo e($asset_request_count); ?></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class='link' href="<?php echo e(url('request/list')); ?>?type=2&status=1" target="new">Service Request</a>
+                                    </td>
+                                    <td id="service_request_count_text" name="service_request_count_text"><?php echo e($service_request_count); ?></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class='link' href="<?php echo e(url('request/list')); ?>?type=3&status=1" target="new">Dispose Request</a>
+                                    </td>
+                                    <td id="dispose_request_count_text" name="dispose_request_count_text"><?php echo e($dispose_request_count); ?></td>
+                                </tr>                          
+                                <tr>
+                                    <td>
+                                        <a class='link' id="checkin_link" name="checkin_link" target="new">Check-In</a>
+                                    </td>
+                                    <td id="checkin_count_text" name="checkin_count_text"><?php echo e($checkin_pending); ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-8">
+            <div class="panel panel-bordered">
+                <div class="panel-body">
+                    <h4 class="text-center">ASSET ANALYSIS</h4>
+                    <div id="chartdiv"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-bordered">
+                <div class="panel-body">
+                    <h4 class="text-center">WARRANTY DETAILS</h4>
+                    <span style="font-size: small" required class="pull-right">(Asset of expire in next 3 month)</span>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th class="text-center">Asset SerialNo</th>
+                            <th class="text-center">Inventory No</th>
+                            <th class="text-center">Asset Location</th>
+                            <th class="text-center">Asset Status</th>
+                            <th class="text-center">Supplier</th>
+                            <th class="text-center">Warranty Start</th>
+                            <th class="text-center">Warranty End</th>
+                            <th class="text-center">Expire (Days)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <?php $i=1 ?>
+                        <?php foreach($data as $item): ?>
+                            <tr>
+                                <td><?php echo e($i); ?></td>
+                                <td class="text-center"><a href="<?php echo e(url('asset/view/')); ?>/<?php echo e($item->id); ?>" style="text-decoration: underline;color:blue">#<?php echo e($item->asset_no); ?></a></td>
+                                <td class="text-center">#<?php echo e($item->inventory_no); ?></td>
+                                <td class="text-center"><span><?php echo e($item->transaction[0]->location->name); ?></span></td>
+                                <td class="text-center">
+                                     <?php if($item->transaction[0]->status->id==ASSET_UNDEPLOY): ?>
+                                        <span class="badge" style="font-size: 10px;background-color: #dda30c"><?php echo e($item->transaction[0]->status->name); ?></span>
+                                    <?php elseif($item->transaction[0]->status->id==ASSET_DISPOSED): ?>
+                                        <span class="badge" style="font-size: 10px;background-color: #dd1144"><?php echo e($item->transaction[0]->status->name); ?></span>
+                                    <?php elseif($item->transaction[0]->status->id==ASSET_INSERVICE): ?>
+                                        <span class="badge" style="font-size: 10px;background-color: #74dd00"><?php echo e($item->transaction[0]->status->name); ?></span>
+                                    <?php elseif($item->transaction[0]->status->id==ASSET_DEPLOY): ?>
+                                        <span class="badge" style="font-size: 10px;background-color: #3e3aff"><?php echo e($item->transaction[0]->status->name); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge" style="font-size: 10px;"><?php echo e($item->transaction[0]->status->name); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center"><?php if($item->supplier): ?><?php echo e($item->supplier->name); ?><?php else: ?><?php echo e('-'); ?><?php endif; ?></td>
+                                <td class="text-center"><?php echo e($item->warranty_from); ?></td>
+                                <td class="text-center"><?php echo e($item->warranty_to); ?></td>
+                                <td class="text-center"><span class="badge" style="background-color: #dd1144"><?php echo e($item->diff); ?></span></td>
+                                <?php $i++ ?>
+                            </tr>
+                            <?php endforeach; ?>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('js'); ?>
+  <script src="<?php echo e(asset('assets/sammy_new/vendor/jquery-validation/dist/jquery.validate.min.js')); ?>"></script>
+  <script src="<?php echo e(asset('assets/sammy_new/vendor/amcharts/amcharts/amcharts.js')); ?>"></script>
+  <script src="<?php echo e(asset('assets/sammy_new/vendor/amcharts/amcharts/pie.js')); ?>"></script>
+  <script type="text/javascript">
+    var id = 0;
+    stage=0;
+    
+    $(document).ready(function(){
+        $('#time_container').perfectScrollbar();
+        $(".panel").addClass('panel-refreshing');
+
+        $('.btn-find').click(function () {
+            load_bucket_data(id);
+        });
+
+        $('.btnStatus').click(function () {
+            var type = $(this).data('id');
+            $(".panel").addClass('panel-refreshing');
+            load_cat_data(type,id);         
+        });
+
+        $("#checkin_link").prop("href", "<?php echo e(url('check-inout/checkin')); ?>?location="+$('#location').val());
+
+        $('#location').change(function () {
+            $(".panel").addClass('panel-refreshing');
+            id = $(this).val();
+            load_bucket_data(id);
+            load_cat_data(0,id);
+            load_request_data(id);
+
+            $("#checkin_link").prop("href", "<?php echo e(url('check-inout/checkin')); ?>?location="+id);
+        });
+
+        load_bucket_data($('#location').val());
+
+        load_cat_data(0,id); 
+    });
+
+    function load_cat_data(type,location) {
+      $.ajax({
+            url: "<?php echo e(url('json/loadCatData')); ?>",
+            type: 'GET',
+            data: {'type': type ,'location':location},
+            success: function (data) {
+                
+                $('#catTable tbody').empty();
+                
+                lk=1;
+                
+                $.each(data.detail,function(index,value){
+                    
+                    $('#catTable tbody').append(
+                        '<tr>'
+                            +'<td>'+lk+'</td>'
+                            +'<td>'
+                                +'<a class="link" href="<?php echo e(url('asset/list')); ?>?model='+value.model_id+'&status='+data.status+'&location='+data.location+'">'+value.category_name+'</a>'
+                            +'</td>'
+                            +'<td>'+value.category_count+'('+value.status_name+')</td>'
+                        +'</tr>'
+                    );
+
+                    lk++;
+                });
+
+                $(".panel").removeClass('panel-refreshing');
+            },
+            error: function (xhr, textStatus, thrownError) {
+                console.log(thrownError);
+            }
+        });
+    }
+
+    function load_request_data(loc_id){
+        $.ajax({
+            url: "<?php echo e(url('json/request-data')); ?>",
+            type: 'GET',
+            data: {'location':loc_id},
+            success: function (data) {
+                $("#asset_request_count_text").text(data.asset_request_count);
+                $("#service_request_count_text").text(data.service_request_count);
+                $("#dispose_request_count_text").text(data.dispose_request_count);
+                $("#checkin_count_text").text(data.checkin_pending);
+                $(".panel").removeClass('panel-refreshing');
+            },
+            error: function (xhr, textStatus, thrownError) {
+                console.log(thrownError);
+            }
+        });
+    }
+
+    function load_bucket_data(id){
+      $.ajax({
+          url: "<?php echo e(url('json/loadBucketData')); ?>" ,
+          type: 'GET',
+          data: {'location' :  id},
+          dataType: 'json',
+          success: function(data) {
+              $(".panel").removeClass('panel-refreshing');
+              $("#total_asset").text(data.total_asset);
+              $("#deploy_asset").text(data.deploy_asset);
+              $("#undeploy_asset").text(data.undeploy_asset);
+              $("#pending_asset").text(data.service_asset);
+              // $("#damage_asset").text(data.damage_asset);
+              $("#damage_asset").text(data.disposed_asset);
+
+              $("#total_asset_des").text("Rs. "+data.total_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+              $("#deploy_asset_des").text("Rs. "+data.deploy_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+              $("#undeploy_asset_des").text("Rs. "+data.undeploy_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+              $("#pending_asset_des").text("Rs. "+data.service_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+              $("#damage_asset_des").text("Rs. "+data.disposed_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+              $("#bucket_row").show();
+
+
+              var chart = AmCharts.makeChart("chartdiv", {
+                  "type": "pie",
+                  "startDuration": 0,
+                  "theme": "light",
+                  "addClassNames": true,
+                  "legend":{
+                      "position":"bottom",
+                      "marginRight":100,
+                      "autoMargins":false
+                  },
+                  "innerRadius": "50%",
+                  "defs": {
+                      "filter": [{
+                          "id": "shadow",
+                          "width": "300%",
+                          "height": "300%",
+                          "feOffset": {
+                              "result": "offOut",
+                              "in": "SourceAlpha",
+                              "dx": 0,
+                              "dy": 0
+                          },
+                          "feGaussianBlur": {
+                              "result": "blurOut",
+                              "in": "offOut",
+                              "stdDeviation": 5
+                          },
+                          "feBlend": {
+                              "in": "SourceGraphic",
+                              "in2": "blurOut",
+                              "mode": "normal"
+                          }
+                      }]
+                  },
+                  "dataProvider": [ {
+                      "country": "DEPLOYED",
+                      "litres": data.deploy_asset
+                  }, {
+                      "country": "UN-DEPLOYED",
+                      "litres": data.undeploy_asset
+                  }, {
+                      "country": "IN-SERVICE",
+                      "litres": data.service_asset
+                  }, {
+                      "country": "DIPOSED",
+                      "litres": data.disposed_asset
+                  }],
+                  "valueField": "litres",
+                  "titleField": "country",
+                  "export": {
+                      "enabled": true
+                  }
+              });
+
+              chart.addListener("init", handleInit);
+
+              chart.addListener("rollOverSlice", function(e) {
+                  handleRollOver(e);
+              });
+
+              function handleInit(){
+                  chart.legend.addListener("rollOverItem", handleRollOver);
+              }
+
+              function handleRollOver(e){
+                  var wedge = e.dataItem.wedge.node;
+                  wedge.parentNode.appendChild(wedge);
+              }
+          },
+          error: function(xhr, textStatus, thrownError) {
+              console.log(thrownError);
+          }
+      });
+    }
+
+
+
+
+  </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.sammy_new.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

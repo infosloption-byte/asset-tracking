@@ -1,0 +1,71 @@
+
+<style type="text/css">
+  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #D96557;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+.dropdown-menu > li > a {
+    display: block;
+    padding: 5px 10px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.dropdown-menu > li > a {
+    padding-right: 15px;
+    padding-left: 15px;
+    color: #616161;
+    font-size: 13px;
+    
+}
+
+span{
+    margin-top: 0.2em;
+}
+
+</style>
+
+<li>
+    <a href="javascript:;" data-toggle="dropdown">
+      <!-- <img src="<?php echo e(asset('assets/sammy_new/images/avatar.jpg')); ?>" class="header-avatar img-circle ml10" alt="user" title="user"> -->
+        <?php if(isset($user)): ?> 
+            <span class="pull-left" style="margin-right:1em">
+                <?php echo "User Code: ".$user->username; ?>
+            </span>
+            <span class="pull-left" style="margin-right:1em">
+                <?php if($user->employee[0]->location): ?>
+                    <?php echo "Location Code : ".$user->employee[0]->location->location->code; ?>
+                <?php else: ?>
+                    <?php echo "Location : N/A "; ?>
+                <?php endif; ?>
+            </span>
+            <span class="pull-left" style="margin-right:1em">
+                <?php if(isset($user->roles[0])): ?> 
+                    <?php echo "Role : ".$user->roles[0]->name; ?>
+                <?php else: ?>
+                    <?php echo "Role : N/A "; ?>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+            <span class="pull-left" style="margin-right:1em">
+                <?php echo "Timestamp : ".date('Y-M-d H:i:s'); ?>
+            </span>
+            <i class="fa fa-sign-out" title="Click Sign Out" style="width: 30px;font-size: 25px" onclick="logout()"></i>
+    </a>
+<!--     <ul class="dropdown-menu">
+        <li style="padding-top: 5px;padding-left:7px;padding-right: 7px;padding-bottom: 5px;">
+            <a href="<?php echo e(url('user/logout')); ?>"><i class="fa fa-sign-out" style="width: 30px;"></i>Logout</a>
+        </li>
+    </ul> -->
+</li>
+
+<script type="text/javascript">
+    function logout(){
+        window.location.href="<?php echo e(url('user/logout')); ?>";
+    }
+</script>
