@@ -18,6 +18,15 @@
 |
 */
 
+// master_nginx terminates SSL and proxies to this container over plain HTTP.
+// Symfony's Request::isSecure() only checks $_SERVER['HTTPS'], so without
+// this Laravel thinks every request is HTTP and generates mixed-content
+// asset/url() links on an https:// page.
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = 443;
+}
+
 require __DIR__.'/core/bootstrap/autoload.php';
 
 /*
