@@ -1,0 +1,20 @@
+services:
+  asset:
+    build: .
+    image: asset-tracking-app
+    container_name: asset_app
+    restart: always
+    ports:
+      - "127.0.0.1:8096:80"
+    networks:
+      - shared_net   # reach mysql_shared by container name
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+networks:
+  shared_net:
+    external: true
